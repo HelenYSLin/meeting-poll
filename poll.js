@@ -1,43 +1,40 @@
-// Replace with your Vercel API URL
-const apiURL = "https://your-vercel-app.vercel.app/api/vote";
+// poll.js
 
-document.getElementById('pollForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
+document.getElementById('voteForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
 
-    // Get the selected time
-    const selectedTime = document.querySelector('input[name="time"]:checked').value;
+    // Get all selected time values
+    const times = Array.from(document.querySelectorAll('input[name="time"]:checked'))
+        .map(checkbox => checkbox.value);
 
-    // Send the vote to the server
-    const response = await fetch(apiURL, {
+    // Send the selected times to the server
+    fetch('/api/vote', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ time: selectedTime }),
-    });
-
-    if (response.ok) {
+        body: JSON.stringify({ times }), // Send as JSON
+    })
+    .then(response => response.json())
+    .then(data => {
         alert('Vote submitted successfully!');
-        loadResults();
-    } else {
-        alert('Failed to submit vote.');
-    }
+        fetchResults(); // Fetch results after submitting
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to submit vote');
+    });
 });
 
-// Fetch and display the current poll results
-async function loadResults() {
-    const response = await fetch(apiURL);
-    const results = await response.json();
-
-    const resultList = document.getElementById('resultList');
-    resultList.innerHTML = '';
-
-    for (const [time, count] of Object.entries(results)) {
-        const li = document.createElement('li');
-        li.textContent = `${time}: ${count} votes`;
-        resultList.appendChild(li);
-    }
+function fetchResults() {
+    fetch('/api/results')
+    .then(response => response.json())
+    .then(data => {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '<h2>Poll Results:</h2>';
+        data.results.forEach(result => {
+            resultsDiv.innerHTML += `<p>${result.time}: ${result.count} votes</p>`;
+        });
+    })
+    .catch(error => console.error('Error fetching results:', error));
 }
-
-// Load results when the page loads
-window.onload = loadResults;
