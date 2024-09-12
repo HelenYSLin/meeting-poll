@@ -1,74 +1,22 @@
+<!-- poll.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meeting Poll</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0 auto;
-            max-width: 600px;
-        }
-        h1 {
-            color: #333;
-        }
-        form {
-            margin: 20px 0;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        #results {
-            margin-top: 30px;
-        }
-    </style>
+    <script src="/path/to/poll.js" defer></script>
 </head>
 <body>
     <h1>Meeting Poll</h1>
-    <p>Select your preferred time for the meeting (1 hour):</p>
-
-    <form id="pollForm">
-        <label>
-            <input type="radio" name="time" value="9AM-10AM"> 9AM - 10AM
-        </label>
-        <label>
-            <input type="radio" name="time" value="10AM-11AM"> 10AM - 11AM
-        </label>
-        <label>
-            <input type="radio" name="time" value="11AM-12PM"> 11AM - 12PM
-        </label>
-        <label>
-            <input type="radio" name="time" value="1PM-2PM"> 1PM - 2PM
-        </label>
-        <label>
-            <input type="radio" name="time" value="2PM-3PM"> 2PM - 3PM
-        </label>
-        <label>
-            <input type="radio" name="time" value="3PM-4PM"> 3PM - 4PM
-        </label>
-
-        <button type="submit">Submit Vote</button>
+    <form id="voteForm">
+        <label for="times">Select available times:</label><br>
+        <input type="checkbox" id="time1" name="time" value="2024-09-15T10:00"> 2024-09-15 10:00<br>
+        <input type="checkbox" id="time2" name="time" value="2024-09-15T11:00"> 2024-09-15 11:00<br>
+        <input type="checkbox" id="time3" name="time" value="2024-09-15T12:00"> 2024-09-15 12:00<br>
+        <!-- Add more options as needed -->
+        <button type="submit">Submit</button>
     </form>
-
-    <div id="results">
-        <h2>Current Poll Results:</h2>
-        <ul id="resultList"></ul>
-    </div>
-
-    <script src="poll.js"></script>
+    <div id="results"></div>
 </body>
 </html>
