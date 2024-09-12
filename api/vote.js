@@ -1,19 +1,30 @@
-// api/vote.js
+// server.js (Node.js with Express)
 
-export default async function handler(req, res) {
-    if (req.method === 'POST') {
-        // Extract date and time from the request body
-        const { date, time } = req.body;
+const express = require('express');
+const app = express();
+app.use(express.json());
 
-        // Check if both date and time are provided
-        if (date && time) {
-            // Here you would normally save the vote to a database or process it
-            // For this example, we're just returning a success message
-            return res.status(200).json({ message: 'Vote received', date, time });
-        } else {
-            return res.status(400).json({ error: 'Date and time are required' });
+const votes = {}; // Store votes as an object with time slots as keys
+
+app.post('/api/vote', (req, res) => {
+    const { times } = req.body;
+    times.forEach(time => {
+        if (!votes[time]) {
+            votes[time] = 0;
         }
-    } else {
-        return res.status(405).json({ error: 'Method Not Allowed' });
-    }
-}
+        votes[time]++;
+    });
+    res.json({ success: true });
+});
+
+app.get('/api/results', (req, res) => {
+    // Convert votes object to an array and sort by count
+    const results = Object.entries(votes)
+        .map(([time, count]) => ({ time, count }))
+        .sort((a, b) => b.count - a.count);
+    res.json({ results });
+});
+
+app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
